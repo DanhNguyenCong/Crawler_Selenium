@@ -2,11 +2,12 @@ import numpy as np
 from selenium import webdriver
 from time import sleep
 import random
+from selenium.webdriver.chrome.service import Service
 from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
 from selenium.webdriver.common.by import By
 import pandas as pd
 # Declare browser
-driver = webdriver.Chrome('D:\chromedriver-win32\chromedriver.exe')
+driver = webdriver.Chrome(service= Service("D:/Crawler/chromedriver-win32/chromedriver.exe"))
 
 # Open URL
 driver.get("https://xe.chotot.com/mua-ban-oto-cu-sdca1")

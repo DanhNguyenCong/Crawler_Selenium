@@ -1,31 +1,21 @@
-import numpy as np
-from selenium import webdriver
-from time import sleep
-import random
-from selenium.webdriver.chrome.service import Service
-from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
-from selenium.webdriver.common.by import By
 import pandas as pd
-# Declare browser
-driver = webdriver.Chrome(service= Service("D:/chromedriver-win32/chromedriver.exe"))
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-driver.get("https://xe.chotot.com/mua-ban-oto-cu-sdca1")
-sleep(random.randint(5,10))
+# Đọc dữ liệu từ file Excel
+file_path = 'C:/Users/MLMachine/Desktop/datasets.xlsx'
+df = pd.read_excel(file_path)
 
+# Chuyển đổi cột 'Price' về số (loại bỏ dấu chấm)
+df['Price'] = df['Price'].str.replace('.', '').astype(int)
 
-# ================================ GET Link
-elems_link = driver.find_elements("xpath", '//*[@id="__next"]/div/div[4]/div[1]/div[3]/main/div[1]/div[4]/div/div[1]/ul/div[1]/div/li/a')
-links = [elem_link for elem_link in elems_link]
+# Tính toán ma trận tương quan cho các cột số
+numeric_df = df.select_dtypes(include=[float, int])
+correlation_matrix = numeric_df.corr()
 
-# ================================ GET title
-elems = driver.find_elements(By.CSS_SELECTOR , ".ard7gu7")
-title = [elem.text for elem in elems]
-# ================================ GET price
-elems_price = driver.find_elements(By.CSS_SELECTOR , ".szp40s8 r9vw5if .bfe6oav")
-price = [elem_price.text for elem_price in elems_price]
-
-
-
-print(links)
-print("\n", title)
-print("\n", price)
+# Vẽ heatmap để hiển thị ma trận tương quan
+plt.figure(figsize=(12, 8))  # Điều chỉnh kích thước cho phù hợp
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f', square=True, cbar_kws={"shrink": .8})
+plt.title('Correlation Matrix of Numerical Attributes')
+plt.tight_layout()  # Tối ưu hóa layout cho các nhãn không bị chồng chéo
+plt.show()
